@@ -17,7 +17,6 @@
 }
 
 let items = [];
-let item_html = "";
 function add() {
   let item = document.getElementById('ADD').value;
   if(item != "" & item.length < 21){
@@ -25,11 +24,11 @@ function add() {
     for (i = 0; i < items.length; i++) {
       if (localStorage.getItem(i) == null){
         localStorage.setItem(i, `
-          <tr class="li">
+          <tr class="li" id="content_${i}">
             <td><input type="checkbox" id="box_${i}" name="done" value="${i}" onclick='checkboxEvent(event)'></td>
             <td><li id="li_${i}">${items[i]}</li></td>
-            <td><img class="icon" id="del_${i}" src="trashbin.png" alt="delete" onclick="delete(${i})"></td>
-            <td><img class="icon" id="move_${i}" src="hamburger.png" alt="move" onclick="move(${i})"></td>
+            <td><img class="icon" id="del_${i}" src="trashbin.png" alt="delete" onclick="del(${i})"></td>
+            <td><img class="icon" id="move_${i}" src="up-arrow.png" alt="move" onmouseover="move(${i})"></td>
           </tr>
         `);
         const a = localStorage.getItem(i);
@@ -44,6 +43,7 @@ function add() {
   }
 }
 
+
 let currentChecking = [];
 function checkboxEvent(event)  {
   if(event.target.checked) {
@@ -56,15 +56,42 @@ function checkboxEvent(event)  {
         i--;
       }
     }
-    let cutUnderline = [localStorage.getItem("underline")];
-    for(var i = 0; i < cutUnderline.length; i++){
-      if (cutUnderline[i] === event.target.value) {
-        console.log(cutUnderline);
-        cutUnderline = cutUnderline.splice(i, 1);
-        i--;
+    localStorage.setItem("underline", currentChecking);
+    console.log(currentChecking);
+    console.log(localStorage.getItem("underline"));
+  }
+  var a = "";
+  for(var i = -1; i < currentChecking.length; i++){
+    a = a + `
+      #li_${currentChecking[i]} {
+        text-decoration : underline;
+        text-decoration-line: line-through;
+      }`;
+    document.getElementById("checkboxstyle").innerHTML = a;
+
+  }
+}
+
+
+
+
+
+function move(i){
+}
+
+function setting() {
+  for (i = 0; i < localStorage.length-1; i++) {
+    if (localStorage.key(i) === "underline"){
+      if (localStorage.getItem("underline").length > 1){
+        currentChecking = localStorage.getItem("underline").split(',');
+      } else {
+        currentChecking = [localStorage.getItem("underline")];
       }
     }
-    localStorage.setItem("underline", cutUnderline);
+    items.push(localStorage.getItem(i));
+    const a = localStorage.getItem(i);
+    const b = document.getElementById("list").innerHTML;
+    document.getElementById("list").innerHTML = b+a;
   }
   var a = "";
   for(var i = 0; i < currentChecking.length; i++){
@@ -73,39 +100,18 @@ function checkboxEvent(event)  {
         text-decoration : underline;
         text-decoration-line: line-through;
       }`;
-      document.getElementById("checkboxstyle").innerHTML = a;
+    $(`#box_${currentChecking[i]}`).prop("checked", true);
+    document.getElementById("checkboxstyle").innerHTML = a;
   }
-  console.log(currentChecking);
 }
 
-
-// function delete(i){
-//
-// }
-//
-// function move(i){
-//
-// }
-
 function init() {
+  window.document.ondragstart = new Function("return false");
+  Function("return false");
+  setting();
   clock();
   setInterval(clock, 1000);
   document.getElementById('ADD').focus();
-  for (i = 0; i < localStorage.length-1; i++) {
-    if (localStorage.key(i) === "underline"){
-      if (localStorage.getItem("underline").length !== 1){
-        currentChecking = localStorage.getItem("underline").split(',');
-      } else {
-        currentChecking = [localStorage.getItem("underline")];
-      }
-    }
-    console.log(currentChecking);
-    items.push(localStorage.getItem(i));
-    const a = localStorage.getItem(i);
-    const b = document.getElementById("list").innerHTML;
-    document.getElementById("list").innerHTML = b+a;
-  }
-
 }
 
 init();

@@ -1,5 +1,9 @@
 body {
 	text-align: center;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 #top{
 	width: 100%;
@@ -13,6 +17,13 @@ body {
 .li{
 	vertical-align: top;
 	text-align: left;
+	/* position: absolute; */
+}
+li{
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
 }
 .left{
 	width: 200px;
@@ -35,5 +46,6 @@ body {
 	text-align: center;
 }
 input::placeholder {
+	text-align: center;
 }
 input:focus { outline: none; }
